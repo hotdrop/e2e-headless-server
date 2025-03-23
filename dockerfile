@@ -30,15 +30,15 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # 5. Python依存関係ファイルをコピーしてインストール
-COPY ../requirements.txt .
+COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r ../requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # 6. Playwrightのブラウザをインストール（chromiumのみ）
 RUN playwright install --with-deps chromium
 
-# 7. 開発環境ではアプリケーションのコードはコピーしない（ローカルからマウントする想定）
-# COPY . .
+# 7. アプリケーションのコードをコピーする
+COPY . .
 
 # 8. Flaskアプリの起動（ホスト側からは8080番を使う前提）
 EXPOSE 8080

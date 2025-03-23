@@ -1,31 +1,20 @@
 {
-  "steps": [
-    {
-      "action": "input",
-      "selector": "#username",
-      "value": "test_user"
-    },
-    {
-      "action": "input",
-      "selector": "#password",
-      "value": "secret"
-    },
-    {
-      "action": "click",
-      "selector": "#login-button"
-    },
-    {
-      "action": "wait",
-      "seconds": 2
-    },
-    {
-      "action": "click",
-      "selector": "a[href='/users']"
-    },
-    {
-      "action": "assertExists",
-      "selector": "h1",
-      "exists": true
-    }
-  ]
+  "target_url": "https://example.com/",
+  "test_case": {
+    "steps": [
+      {
+        "action": "click",
+        "selector": "a[href='https://www.iana.org/domains/example']"
+      },
+      {
+        "action": "wait",
+        "seconds": 1
+      },
+      {
+        "action": "assertExists",
+        "selector": "h1",
+        "exists": true
+      }
+    ]
+  }
 }

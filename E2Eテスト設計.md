@@ -34,15 +34,15 @@ Flaskでサーバーを立てている。POSTでエンドポイントは`/run_te
 | 🔸 API(/run_tests) | curlで叩いたときに意図したレスポンスが返るか |
 
 ## テストケースjsonの仕様
-| アクション名 |     内容     |
+|     要素名    |     内容     |
 | ------------ | ------------- |
-| action       | 実行する操作。input, click, wait, assert |
+| action       | 実行する操作。input, click, wait, assertExists |
 | selector     | CSSセレクタ |
 | value        | 入力値。inputアクション時のみ使用 |
 | secondswait  | アクション時に待機する秒数 |
 | exists       | assert時に要素が存在すべきかどうか(true/false) |
 ## 今後あっても良いアクション
-|     アクション名   |     内容     |
+|      action名    |     内容     |
 | ---------------- | ------------- |
 | assert_text      | 特定の要素内に特定のテキストが含まれるか検証 |
 | screenshot       | スクリーンショットを撮って特定のディレクトリに保存 |
@@ -51,10 +51,12 @@ Flaskでサーバーを立てている。POSTでエンドポイントは`/run_te
 | scroll_into_view | 特定要素までスクロール |
 
 ## 動作確認手順
-1. イメージ作成: docker build .
-2. サーバー実行: docker run -p 8080:8080
-   1. docker run -p 8080:8080 -v $(pwd):/app your-image-name
-3. テスト: curl -X POST http://localhost:8080/run_tests -H "Content-Type: application/json" -d @test_request.json
+1. イメージ作成
+   1. docker build -t e2e-server .
+2. サーバー実行
+   1. docker run -p 8080:8080 e2e-server
+3. テスト実行
+   1. curl -X POST http://localhost:8080/run_tests -H "Content-Type: application/json" -d @sample_test_case.json
 
 
 
