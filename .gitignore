@@ -1,0 +1,46 @@
+# Pythonのキャッシュや一時ファイル
+__pycache__/
+*.py[cod]
+*.pyo
+
+# 仮想環境
+.venv/
+env/
+
+# 環境変数設定ファイル
+.env
+*.env
+
+# IDEやエディタの設定ファイル
+.vscode/
+.idea/
+
+# データベースファイル
+*.db
+*.sqlite3
+instance/
+
+# ログファイル
+*.log
+
+# OS固有の隠しファイル
+.DS_Store
+Thumbs.db
+
+# テスト関連
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ビルド関連
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# その他
+*.bak
+*.swp
+*.swo

@@ -1,0 +1,31 @@
+{
+  "steps": [
+    {
+      "action": "input",
+      "selector": "#username",
+      "value": "test_user"
+    },
+    {
+      "action": "input",
+      "selector": "#password",
+      "value": "secret"
+    },
+    {
+      "action": "click",
+      "selector": "#login-button"
+    },
+    {
+      "action": "wait",
+      "seconds": 2
+    },
+    {
+      "action": "click",
+      "selector": "a[href='/users']"
+    },
+    {
+      "action": "assertExists",
+      "selector": "h1",
+      "exists": true
+    }
+  ]
+}
