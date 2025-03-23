@@ -11,6 +11,17 @@
       1. テスト対象URL
       2. テストケース(jsonオブジェクト)
    2. レスポンス: 実行結果（成功・失敗、ログ、失敗理由など）
+## ディレクトリ構成
+project_root/
+├── app.py
+├── actions/
+├── tests/
+│   ├── test_input_action.py
+│   ├── test_click_action.py
+│   └── ...
+├── requirements.txt
+└── dockerfile
+
 ## サーバーアプリ
 Flaskでサーバーを立てている。POSTでエンドポイントは`/run_tests`となる。Play Wrightで実装しているため独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行する。actionの仕様はテストケースの欄に記載。
 ### テスト
