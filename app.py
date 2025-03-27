@@ -1,12 +1,21 @@
+# app.py
 from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 from actions.factory import ActionFactory
+import os
 
 app = Flask(__name__)
 
+# 環境変数からAPIキーを取得（デフォルト値あり）
+API_KEY = os.environ.get("API_KEY", "default-secret-key")
+
 @app.route('/run_tests', methods=['POST'])
 def run_tests():
-    # リクエストからエントリポイントURLとテストケースを取得する
+    # APIキーの検証
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or auth_header != f"Bearer {API_KEY}":
+        return jsonify({"error": "Unauthorized"}), 401
+
     data = request.get_json()
     target_url = data.get('target_url')
     test_case = data.get('test_case')
@@ -20,7 +29,6 @@ def run_tests():
     except Exception as e:
         return jsonify({"status": "failed", "error": str(e)}), 500
 
-# テストフロー実行関数
 def run_test_flow(target_url: str, test_case: dict) -> dict:
     results = {"status": "success", "steps": []}
 

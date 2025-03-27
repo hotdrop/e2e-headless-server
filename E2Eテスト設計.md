@@ -1,6 +1,7 @@
 # 第一弾
 ## 目標
-ローカルでDockerコンテナを起動し、curlコマンドでAPIを実行し、PlaywrightによるE2Eテストが実行され、結果が返ってくること
+ローカルでDockerコンテナを起動し、curlコマンドでAPIを実行し、PlaywrightによるE2Eテストが実行され、結果が返ってくること。
+
 ## 構成要素の整理
 1. 環境・技術スタック
    1. python、Flask使用
@@ -11,6 +12,7 @@
       1. テスト対象URL
       2. テストケース(jsonオブジェクト)
    2. レスポンス: 実行結果（成功・失敗、ログ、失敗理由など）
+
 ## ディレクトリ構成
 project_root/
 ├── app.py
@@ -24,6 +26,7 @@ project_root/
 
 ## サーバーアプリ
 Flaskでサーバーを立てている。POSTでエンドポイントは`/run_tests`となる。Play Wrightで実装しているため独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行する。actionの仕様はテストケースの欄に記載。
+
 ### テスト
 テストツールは`pytest`とする。テストを書く対象（粒度）を分けて考える。
 
@@ -51,12 +54,21 @@ Flaskでサーバーを立てている。POSTでエンドポイントは`/run_te
 | scroll_into_view | 特定要素までスクロール |
 
 ## 動作確認手順
-1. イメージ作成
-   1. docker build -t e2e-server .
-2. サーバー実行
-   1. docker run -p 8080:8080 e2e-server
-3. テスト実行
-   1. curl -X POST http://localhost:8080/run_tests -H "Content-Type: application/json" -d @sample_test_case.json
+```
+// イメージ作成
+docker build -t e2e-server .
+
+// サーバー実行
+docker run -p 8080:8080 -e API_KEY=KEY12345 e2e-server
+
+// テスト実行
+curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case.json
+```
+
+# 第二弾
+- APIKeyをGoogleCloudのSecretManagerで管理する
+- テスト結果をFirestoreに保存する
+- Cloud Runにデプロイできるようにする
 
 
 
