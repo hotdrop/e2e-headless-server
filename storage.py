@@ -1,10 +1,10 @@
 import os
 from google.cloud import storage
-from config import Config
+from config import Config, ENV
 
 class StorageHandler:
     def __init__(self):
-        if Config.ENV != "dev":
+        if ENV != "dev":
             self.client = storage.Client()
             self.bucket = self.client.bucket(Config.BUCKET_NAME)
         else:
@@ -13,7 +13,7 @@ class StorageHandler:
 
     def save_screenshot(self, temp_path: str, date_str: str, filename: str) -> str:
         # スクリーンショットを保存し、保存先のパスを返す
-        if Config.ENV == "dev":
+        if ENV == "dev":
             return self._save_screenshot_local(temp_path, date_str, filename)
         else:
             return self._save_screenshot_cloud_storage(temp_path, date_str, filename)

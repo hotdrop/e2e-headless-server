@@ -31,6 +31,7 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+output/
 
 # ビルド関連
 build/

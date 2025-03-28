@@ -19,6 +19,10 @@
         "action": "assertText",
         "selector": "h1",
         "text": "Example Domains"
+      },
+      {
+        "action": "screenshot",
+        "text": "スクショ"
       }
     ]
   }

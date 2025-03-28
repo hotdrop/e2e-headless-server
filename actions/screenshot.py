@@ -19,9 +19,6 @@ class ScreenshotAction(BaseAction):
         storage_handler = StorageHandler()
         storage_path = storage_handler.save_screenshot(temp_path, date_str, filename)
         
-        # 一時ファイルを削除
-        os.remove(temp_path)
-        
         return {
             "status": "executed",
             "screenshot_path": storage_path
