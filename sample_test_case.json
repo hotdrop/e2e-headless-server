@@ -14,6 +14,11 @@
         "action": "assertExists",
         "selector": "h1",
         "exists": true
+      },
+      {
+        "action": "assertText",
+        "selector": "h1",
+        "text": "Example Domains"
       }
     ]
   }

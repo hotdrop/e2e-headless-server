@@ -2,6 +2,7 @@ from actions.input import InputAction
 from actions.click import ClickAction
 from actions.wait import WaitAction
 from actions.assert_exists import AssertExistsAction
+from actions.assert_text import AssertTextAction
 
 class ActionFactory:
     @staticmethod
@@ -15,5 +16,7 @@ class ActionFactory:
             return WaitAction(step)
         elif action == "assertExists":
             return AssertExistsAction(step)
+        elif action == "assertText":
+            return AssertTextAction(step)
         else:
             raise ValueError(f"Unknown action: {action}")

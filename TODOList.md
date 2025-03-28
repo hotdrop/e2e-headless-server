@@ -6,8 +6,6 @@
 - CloudRun上で動かす場合: APIKeyをGoogleCloudのSecretManagerから取得する。
 
 ## 2. 以下の新しいアクションを実装する
-- assert_text
-  - 特定の要素内に特定のテキストが含まれるか検証
 - screenshot
   - スクリーンショットを撮って特定のディレクトリに保存
 

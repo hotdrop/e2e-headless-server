@@ -68,6 +68,14 @@ API Keyは以下の仕様とします。
 | Factory         | 正しいクラスが返ってくるか（入力に応じて） |
 | API(/run_tests) | curlで叩いたときに意図したレスポンスが返るか |
 
+テストを実行する場合のコマンド
+```sh
+// ventで仮想環境を作っている場合
+source .venv/bin/activate
+
+// テスト実行
+pytest tests/
+```
 
 # 動作確認手順
 ```
@@ -77,7 +85,7 @@ docker build -t e2e-server .
 // サーバー実行
 docker run -p 8080:8080 -e API_KEY=KEY12345 e2e-server
 
-// テスト実行
+// サンプルのテストケース実行
 curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case.json
 ```
 
