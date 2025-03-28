@@ -83,7 +83,7 @@ pytest tests/
 docker build -t e2e-server .
 
 // サーバー実行
-docker run -p 8080:8080 -e API_KEY=KEY12345 e2e-server
+docker run -p 8080:8080 -v $(pwd)/output:/output -e ENV=dev -e API_KEY=KEY12345 e2e-server
 
 // サンプルのテストケース実行
 curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case.json

@@ -2,18 +2,15 @@
 from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 from actions.factory import ActionFactory
-import os
+from config import Config
 
 app = Flask(__name__)
-
-# 環境変数からAPIキーを取得（デフォルト値あり）
-API_KEY = os.environ.get("API_KEY", "default-secret-key")
 
 @app.route('/run_tests', methods=['POST'])
 def run_tests():
     # APIキーの検証
     auth_header = request.headers.get("Authorization")
-    if not auth_header or auth_header != f"Bearer {API_KEY}":
+    if not auth_header or auth_header != f"Bearer {Config.API_KEY}":
         return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json()
