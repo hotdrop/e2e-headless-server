@@ -6,7 +6,6 @@ alwaysApply: true
 # 1. Project Overview
 This application is a server that supports E2E testing. It provides a single API endpoint that accepts a target website URL and test cases (in JSON format) as input. Using the Playwright library, it executes specified actions in headless mode and returns the results in the response.
 
-
 ## Execution Environments
 - Local: Testable with Docker container + curl command
 - Remote: Running on Cloud Run (for internal testers)

@@ -70,6 +70,9 @@ API Keyは以下の仕様とします。
 
 テストを実行する場合のコマンド
 ```sh
+// 新たにライブラリを追加した場合
+pip install -r requirements.txt
+
 // ventで仮想環境を作っている場合
 source .venv/bin/activate
 

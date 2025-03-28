@@ -3,6 +3,7 @@ from actions.click import ClickAction
 from actions.wait import WaitAction
 from actions.assert_exists import AssertExistsAction
 from actions.assert_text import AssertTextAction
+from actions.screenshot import ScreenshotAction
 
 class ActionFactory:
     @staticmethod
@@ -18,5 +19,7 @@ class ActionFactory:
             return AssertExistsAction(step)
         elif action == "assertText":
             return AssertTextAction(step)
+        elif action == "screenshot":
+            return ScreenshotAction(step)
         else:
             raise ValueError(f"Unknown action: {action}")
