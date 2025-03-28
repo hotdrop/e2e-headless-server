@@ -1,0 +1,60 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 1. Project Overview
+This application is a server that supports E2E testing. It provides a single API endpoint that accepts a target website URL and test cases (in JSON format) as input. Using the Playwright library, it executes specified actions in headless mode and returns the results in the response.
+
+
+## Execution Environments
+- Local: Testable with Docker container + curl command
+- Remote: Running on Cloud Run (for internal testers)
+
+# 2. Technology Stack
+- Language: Python
+- HTTP Server: Flask
+- E2E Testing Library: Playwright
+- Runtime Environment: Docker
+
+# 3. Project Structure
+project_root/
+├── app.py
+├── actions/     // Place each action in separate files
+│   ├── base.py  // All action implementations must inherit from base.py
+│   ├── click.py
+│   └── ...
+├── tests/       // Tests for each action
+│   ├── test_input_action.py
+│   ├── test_click_action.py
+│   └── ...
+├── requirements.txt
+└── dockerfile
+
+# 4. Development Rules
+## Coding Standards
+- Comply with PEP 8
+- Action classes must inherit from base.py
+- New actions must include corresponding test implementations
+
+# 5. Test Specifications
+## Test Case JSON Specification
+|     Element    |     Description     |
+| ------------ | ------------- |
+| action       | Operation to execute: input, click, wait, assertExists |
+| selector     | CSS selector |
+| value        | Input value (used only for input action) |
+| secondswait  | Wait time in seconds before action |
+| exists       | Boolean flag for assertion (true/false) |
+
+## Test Coverage
+|      Test Target     | Description |
+| ------------------ | ----- |
+| Action Classes | Verify execute function behavior for InputAction, ClickAction, etc. |
+| Factory           | Verify correct class instantiation based on input |
+| API(/run_tests)   | Verify expected responses when called via curl |
+
+## 6. Security
+### API Authentication
+- Local Environment: API Key specified via environment variable
+- Cloud Run Environment: API Key managed through Secret Manager
