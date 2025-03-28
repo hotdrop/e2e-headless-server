@@ -32,9 +32,9 @@ Flaskでサーバーを立てている。POSTでエンドポイントは`/run_te
 
 |      テスト対象     | 内容 |
 | ------------------ | ----- |
-| 🔹 各アクションクラス | InputActionやClickActionなどのexecute関数の動作検証 |
-| 🔹 Factory         | 正しいクラスが返ってくるか（入力に応じて） |
-| 🔸 API(/run_tests) | curlで叩いたときに意図したレスポンスが返るか |
+| 各アクションクラス | InputActionやClickActionなどのexecute関数の動作検証 |
+| Factory         | 正しいクラスが返ってくるか（入力に応じて） |
+| API(/run_tests) | curlで叩いたときに意図したレスポンスが返るか |
 
 ## テストケースjsonの仕様
 |     要素名    |     内容     |
@@ -44,14 +44,6 @@ Flaskでサーバーを立てている。POSTでエンドポイントは`/run_te
 | value        | 入力値。inputアクション時のみ使用 |
 | secondswait  | アクション時に待機する秒数 |
 | exists       | assert時に要素が存在すべきかどうか(true/false) |
-## 今後あっても良いアクション
-|      action名    |     内容     |
-| ---------------- | ------------- |
-| assert_text      | 特定の要素内に特定のテキストが含まれるか検証 |
-| screenshot       | スクリーンショットを撮って特定のディレクトリに保存 |
-| press_key        | エンターキーやタブなどのキー操作 |
-| hover            | 要素にマウスをホバーする |
-| scroll_into_view | 特定要素までスクロール |
 
 ## 動作確認手順
 ```
@@ -67,9 +59,17 @@ curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345"
 
 # 第二弾
 - APIKeyをGoogleCloudのSecretManagerで管理する
-- テスト結果をFirestoreに保存する
 - Cloud Runにデプロイできるようにする
+- 以下のアクションを実装する
 
+## 欲しいアクション
+|      action名    |     内容     |
+| ---------------- | ------------- |
+| assert_text      | 特定の要素内に特定のテキストが含まれるか検証 |
+| screenshot       | スクリーンショットを撮って特定のディレクトリに保存 |
+| press_key        | エンターキーやタブなどのキー操作 |
+| hover            | 要素にマウスをホバーする |
+| scroll_into_view | 特定要素までスクロール |
 
 
 # 検討事項まとめ
