@@ -35,11 +35,6 @@ project_root/
 ├── requirements.txt
 └── dockerfile
 
-# 開発ルール
-- PEP 8に準拠
-- actionクラスは必ずbase.pyを継承すること
-- 新規action追加時は必ずテストも実装すること
-
 # テストケースのjson仕様
 独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行します。actionの仕様は以下の通りです。サンプルのjsonが必要な場合は同ディレクトリの`sample_test_case.json`を確認してください。
 
@@ -57,7 +52,7 @@ API Keyは以下の仕様とします。
 - ローカルで実行する場合
   - docker run時に環境変数でAPIKeyを指定します、curlコマンドで"Authorization"を指定することで容易に検証が可能となります。
 - CloudRun上で実行する場合
-  - APIKeyが漏れた場合に容易に変更管理できるようGoogleCloudのSecretManagerを使う予定です（未実装）
+  - APIKeyが漏れた場合に容易に変更管理できるようGoogleCloudの`SecretManager`を使う予定です（未実装）
 
 # テスト
 テストツールは`pytest`を使用しており、テストを書く対象（粒度）を分けて考えます。
