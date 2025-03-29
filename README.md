@@ -22,25 +22,29 @@
       1. 実行結果（成功・失敗、ログ、失敗理由など）
 
 # ディレクトリ構成
-project_root/
-├── app.py
-├── actions/     // ここにアクションを1ファイルずつ分けて入れる
-│   ├── base.py  // 実装するアクションは必ずbase.pyを継承する
-│   ├── click.py
-│   └── ...
-├── tests/       // アクションを実装したら必ずテストも実装する
-│   ├── test_input_action.py
-│   ├── test_click_action.py
-│   └── ...
-├── requirements.txt
-└── dockerfile
+project_root/  
+├── app.py  
+├── actions/  
+│　　　├── base.py  
+│　　　├── click.py   
+│　　　└── ...  
+├── tests/  
+│　　　├── test_input_action.py  
+│　　　├── test_click_action.py  
+│　　　└── ...  
+├── requirements.txt  
+└── dockerfile  
+
+- `actions/`: ここにアクションを1ファイルずつ分けて入れる
+- `base.py`: 実装するアクションは必ずbase.pyを継承する
+- `tests/`: アクションを実装したら必ずテストも実装する
 
 # テストケースのjson仕様
 独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行します。actionの仕様は以下の通りです。サンプルのjsonが必要な場合は同ディレクトリの`sample_test_case.json`を確認してください。
 
 |     要素名    |     内容     |
 | ------------ | ------------- |
-| action       | 実行する操作。input, click, wait, assertExists |
+| action       | 実行する操作。input, click, wait, assertExists, assertText, screenshot |
 | selector     | CSSセレクタ |
 | value        | 入力値。inputアクション時のみ使用 |
 | secondswait  | アクション時に待機する秒数 |
