@@ -3,7 +3,7 @@
 - ローカル
   - Dockerコンテナを起動し、curlコマンドでAPIをテストできる。特にクラウドサービスは使用しない
 - リモート
-  - 社内のテスターが使用するためCloudRun上にアップする。GoogleCloudのサービスを使う
+  - CloudRun上にデプロイして稼働させる。`Cloud Storage`や`Firestore`など`Google Cloud`のサービスを使用する
 
 # 構成要素の整理
 1. 環境・技術スタック
@@ -52,11 +52,7 @@ project_root/
 
 # APIの認証について
 CloudRun上にデプロイするとURLを知っていれば誰でもAPIを実行できてしまうためセキュリティ的に良くないです。かといって第三者がこのAPIを実行しても特に盗用される情報はありません。そこでガチガチにセキュリティを固めることはせず、でもフル開放状態にはしない設計としてAPI Keyを採用することにしました。
-API Keyは以下の仕様とします。
-- ローカルで実行する場合
-  - docker run時に環境変数でAPIKeyを指定します、curlコマンドで"Authorization"を指定することで容易に検証が可能となります。
-- CloudRun上で実行する場合
-  - APIKeyが漏れた場合に容易に変更管理できるようGoogleCloudの`SecretManager`を使う予定です（未実装）
+API Keyはデプロイ時や（ローカルの場合）docker run時に環境変数でAPIKeyを指定します、curlコマンドで"Authorization"を指定することで容易に検証が可能となります。
 
 # テスト
 テストツールは`pytest`を使用しており、テストを書く対象（粒度）を分けて考えます。
@@ -90,14 +86,12 @@ docker run -p 8080:8080 -v $(pwd)/output:/output -e ENV=dev -e API_KEY=KEY12345 
 // サンプルのテストケース実行
 curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case.json
 ```
-
-
 # 将来的に追加しても良いアクション
 |      action名    |     内容     |
 | ---------------- | ------------- |
 | press_key        | エンターキーやタブなどのキー操作 |
-| hover            | 要素にマウスをホバーする |
 | scroll_into_view | 特定要素までスクロール |
+
 
 # 過去の検討事項まとめ
 ## SeleniumとPlaywrightどちらを採用すべきか？

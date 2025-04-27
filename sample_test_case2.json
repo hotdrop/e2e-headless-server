@@ -1,0 +1,16 @@
+{
+  "target_url": "https://finnovalley.jp/",
+  "test_case": {
+    "steps": [
+      {
+        "action": "assertText",
+        "selector": "p:has-text(\"Business\")",
+        "text": "Business"
+      },
+      {
+        "action": "screenshot",
+        "text": "スクショ"
+      }
+    ]
+  }
+}
