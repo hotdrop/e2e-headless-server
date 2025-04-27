@@ -17,9 +17,10 @@ class ScreenshotAction(BaseAction):
         
         # ストレージハンドラーを使用して保存
         storage_handler = StorageHandler()
-        storage_path = storage_handler.save_screenshot(temp_path, date_str, filename)
+        # site_id を save_screenshot に渡す
+        storage_path = storage_handler.save_screenshot(temp_path, self.site_id, date_str, filename) 
         
         return {
             "status": "executed",
             "screenshot_path": storage_path
-        } 
+        }

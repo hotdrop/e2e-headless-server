@@ -14,18 +14,19 @@ def run_tests():
 
     data = request.get_json()
     target_url = data.get('target_url')
+    site_id = data.get('site_id')
     test_case = data.get('test_case')
 
-    if not target_url or not test_case:
-        return jsonify({"error": "Missing target_url or test_case"}), 400
+    if not target_url or not site_id or not test_case:
+        return jsonify({"error": "Missing target_url, test_case, or site_id"}), 400
 
     try:
-        results = run_test_flow(target_url, test_case)
+        results = run_test_flow(target_url, site_id, test_case)
         return jsonify(results), 200
     except Exception as e:
         return jsonify({"status": "failed", "error": str(e)}), 500
 
-def run_test_flow(target_url: str, test_case: dict) -> dict:
+def run_test_flow(target_url: str, site_id: str, test_case: dict) -> dict:
     results = {"status": "success", "steps": []}
 
     with sync_playwright() as p:
@@ -35,7 +36,7 @@ def run_test_flow(target_url: str, test_case: dict) -> dict:
 
         for index, step in enumerate(test_case.get("steps", [])):
             try:
-                action_instance = ActionFactory.create(step)
+                action_instance = ActionFactory.create(site_id, step)
                 result = action_instance.execute(page)
                 result["step"] = index + 1
                 result["action"] = step.get("action")

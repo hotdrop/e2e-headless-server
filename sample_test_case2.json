@@ -1,5 +1,6 @@
 {
   "target_url": "https://finnovalley.jp/",
+  "site_id": "finnovalley_site",
   "test_case": {
     "steps": [
       {

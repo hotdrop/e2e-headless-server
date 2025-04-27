@@ -1,5 +1,6 @@
 {
   "target_url": "https://example.com/",
+  "site_id": "sample_site",
   "test_case": {
     "steps": [
       {

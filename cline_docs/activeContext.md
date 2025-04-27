@@ -1,15 +1,16 @@
 # Active Context
 
 ## 現在のタスク
-- Memory Bank ファイル群の初期化
-- `README.md` の内容に基づいて `.clinerules` ファイルを作成する
+- APIリクエストに `site_id` パラメータを追加する。
+- スクリーンショットの保存パスを `日付/ファイル名` から `site_id/日付/ファイル名` に変更する。
 
 ## 最近の変更
-- `cline_docs/productContext.md` を作成しました。
+- (未実施)
 
 ## 次のステップ
-1. `cline_docs/systemPatterns.md` を作成します。
-2. `cline_docs/techContext.md` を作成します。
-3. `cline_docs/progress.md` を作成します。
-4. Memory Bank の初期化が完了したら、`README.md` を分析し、`.clinerules` ファイルの内容を定義します。
-5. `.clinerules` ファイルを作成します。
+1. `app.py` を修正し、`/run_tests` で `site_id` を受け取り、`run_test_flow` に渡す。
+2. `actions/factory.py` と `actions/base.py` を修正し、アクションクラスが `site_id` を受け取れるようにする。
+3. `actions/screenshot.py` を修正し、`save_screenshot` に `site_id` を渡す。
+4. `storage.py` を修正し、`save_screenshot` が `site_id` を受け取り、新しいパス形式で保存するようにする。
+5. 関連するユニットテストを修正する。
+6. `activeContext.md` を更新する。（このステップは完了）

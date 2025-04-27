@@ -7,19 +7,19 @@ from actions.screenshot import ScreenshotAction
 
 class ActionFactory:
     @staticmethod
-    def create(step: dict):
+    def create(site_id: str, step: dict):
         action = step.get("action")
         if action == "input":
-            return InputAction(step)
+            return InputAction(site_id, step)
         elif action == "click":
-            return ClickAction(step)
+            return ClickAction(site_id, step)
         elif action == "wait":
-            return WaitAction(step)
+            return WaitAction(site_id, step)
         elif action == "assertExists":
-            return AssertExistsAction(step)
+            return AssertExistsAction(site_id, step)
         elif action == "assertText":
-            return AssertTextAction(step)
+            return AssertTextAction(site_id, step)
         elif action == "screenshot":
-            return ScreenshotAction(step)
+            return ScreenshotAction(site_id, step)
         else:
             raise ValueError(f"Unknown action: {action}")
