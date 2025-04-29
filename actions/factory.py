@@ -4,6 +4,7 @@ from actions.wait import WaitAction
 from actions.assert_exists import AssertExistsAction
 from actions.assert_text import AssertTextAction
 from actions.screenshot import ScreenshotAction
+from actions.scroll_into_view import ScrollIntoViewAction
 
 class ActionFactory:
     @staticmethod
@@ -20,6 +21,8 @@ class ActionFactory:
         elif action == "assertText":
             return AssertTextAction(site_id, step) 
         elif action == "screenshot":
-            return ScreenshotAction(site_id, step) 
+            return ScreenshotAction(site_id, step)
+        elif action == "scroll_into_view":
+            return ScrollIntoViewAction(site_id, step)
         else:
             raise ValueError(f"Unknown action: {action}")

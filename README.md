@@ -43,13 +43,14 @@ project_root/
 # テストケースのjson仕様
 独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行します。actionの仕様は以下の通りです。サンプルのjsonが必要な場合は同ディレクトリの`sample_test_case.json`を確認してください。
 
-|     要素名    |     内容     |
-| ------------ | ------------- |
-| action       | 実行する操作。input, click, wait, assertExists, assertText, screenshot |
-| selector     | CSSセレクタ |
-| value        | 入力値。inputアクション時のみ使用 |
-| secondswait  | アクション時に待機する秒数 |
-| exists       | assert時に要素が存在すべきかどうか(true/false) |
+|     要素名     |     内容     |
+| ------------- | ------------- |
+| action        | 実行する操作。input, click, wait, assertExists, assertText, screenshot, scroll_into_view |
+| selector      | CSSセレクタ |
+| value         | 入力値。inputアクション時のみ使用 |
+| secondswait   | アクション時に待機する秒数 |
+| exists        | assert時に要素が存在すべきかどうか(true/false) |
+| timeoutMillis | タイムアウトをmsで指定。scroll_into_viewアクション時のみ使用。デフォルトは5秒。 |
 
 # APIの認証について
 CloudRun上にデプロイするとエンドポイントを知っていれば誰でも実行できます。しかし、第三者がこのAPIを実行しても特に盗用される情報はありません。
@@ -100,13 +101,12 @@ docker build -t e2e-server .
 docker run -p 8080:8080 -v $(pwd)/output:/output -e ENV=dev -e API_KEY=KEY12345 e2e-server
 
 // サンプルのテストケース実行
-curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case.json
+curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case2.json
 ```
 # 将来的に追加しても良いアクション
 |      action名    |     内容     |
 | ---------------- | ------------- |
 | press_key        | エンターキーやタブなどのキー操作 |
-| scroll_into_view | 特定要素までスクロール |
 
 
 # 過去の検討事項まとめ
