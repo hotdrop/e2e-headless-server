@@ -10,16 +10,16 @@ class ActionFactory:
     def create(site_id: str, step: dict):
         action = step.get("action")
         if action == "input":
-            return InputAction(site_id, step)
+            return InputAction(site_id, step) 
         elif action == "click":
-            return ClickAction(site_id, step)
+            return ClickAction(site_id, step) 
         elif action == "wait":
-            return WaitAction(site_id, step)
+            return WaitAction(site_id, step) 
         elif action == "assertExists":
-            return AssertExistsAction(site_id, step)
+            return AssertExistsAction(site_id, step) 
         elif action == "assertText":
-            return AssertTextAction(site_id, step)
+            return AssertTextAction(site_id, step) 
         elif action == "screenshot":
-            return ScreenshotAction(site_id, step)
+            return ScreenshotAction(site_id, step) 
         else:
             raise ValueError(f"Unknown action: {action}")

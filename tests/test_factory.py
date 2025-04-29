@@ -7,14 +7,16 @@ from actions.wait import WaitAction
 from actions.assert_exists import AssertExistsAction
 from actions.assert_text import AssertTextAction
 
+TEST_SITE = "test_site"
+
 def test_factory_creates_correct_action():
-    assert isinstance(ActionFactory.create({"action": "input"}), InputAction)
-    assert isinstance(ActionFactory.create({"action": "click"}), ClickAction)
-    assert isinstance(ActionFactory.create({"action": "wait"}), WaitAction)
-    assert isinstance(ActionFactory.create({"action": "assertExists"}), AssertExistsAction)
-    assert isinstance(ActionFactory.create({"action": "assertText"}), AssertTextAction)
-    assert isinstance(ActionFactory.create({"action": "screenshot"}), ScreenshotAction)
+    assert isinstance(ActionFactory.create(TEST_SITE, {"action": "input"}), InputAction)
+    assert isinstance(ActionFactory.create(TEST_SITE, {"action": "click"}), ClickAction)
+    assert isinstance(ActionFactory.create(TEST_SITE, {"action": "wait"}), WaitAction)
+    assert isinstance(ActionFactory.create(TEST_SITE, {"action": "assertExists"}), AssertExistsAction)
+    assert isinstance(ActionFactory.create(TEST_SITE, {"action": "assertText"}), AssertTextAction)
+    assert isinstance(ActionFactory.create(TEST_SITE, {"action": "screenshot"}), ScreenshotAction)
 
 def test_factory_raises_for_unknown_action():
     with pytest.raises(ValueError):
-        ActionFactory.create({"action": "unknown"})
+        ActionFactory.create(TEST_SITE, {"action": "unknown"})

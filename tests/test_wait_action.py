@@ -1,6 +1,8 @@
 import time
 from actions.wait import WaitAction
 
+TEST_SITE = "test_site"
+
 def test_wait_action_waits_correct_seconds(monkeypatch):
     called = []
 
@@ -14,7 +16,7 @@ def test_wait_action_waits_correct_seconds(monkeypatch):
         "seconds": 2
     }
 
-    action = WaitAction(step)
+    action = WaitAction(TEST_SITE, step)
     result = action.execute(None)
 
     assert result["status"] == "executed"

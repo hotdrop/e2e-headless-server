@@ -2,6 +2,8 @@ import pytest
 from actions.input import InputAction
 from playwright.sync_api import sync_playwright
 
+TEST_SITE = "test_site"
+
 def test_input_action_executes_fill():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -14,7 +16,7 @@ def test_input_action_executes_fill():
             "value": "hello"
         }
 
-        action = InputAction(step)
+        action = InputAction(TEST_SITE, step)
         result = action.execute(page)
 
         assert result["status"] == "executed"

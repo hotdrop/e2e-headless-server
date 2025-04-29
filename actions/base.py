@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
 class BaseAction(ABC):
-    def __init__(site_id: str, self, step: dict):
-        self.site_id = site_id
+    def __init__(self, site_id: str, step: dict): 
+        self.site_id = site_id # site_id をインスタンス変数として保持
         self.step = step
 
     @abstractmethod

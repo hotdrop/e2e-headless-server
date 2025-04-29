@@ -2,6 +2,8 @@ import pytest
 from actions.assert_text import AssertTextAction
 from playwright.sync_api import sync_playwright
 
+TEST_SITE = "test_site"
+
 def test_assert_text_passes_when_text_exists():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -14,7 +16,7 @@ def test_assert_text_passes_when_text_exists():
             "text": "Hello"
         }
 
-        action = AssertTextAction(step)
+        action = AssertTextAction(TEST_SITE, step)
         result = action.execute(page)
 
         assert result["status"] == "executed"
@@ -32,7 +34,7 @@ def test_assert_text_fails_when_text_missing():
             "text": "Goodbye"
         }
 
-        action = AssertTextAction(step)
+        action = AssertTextAction(TEST_SITE, step)
         with pytest.raises(AssertionError) as exc_info:
             action.execute(page)
         
@@ -53,7 +55,7 @@ def test_assert_text_fails_when_element_missing():
             "text": "Hello"
         }
 
-        action = AssertTextAction(step)
+        action = AssertTextAction(TEST_SITE, step)
         with pytest.raises(AssertionError) as exc_info:
             action.execute(page)
         
@@ -71,7 +73,7 @@ def test_assert_text_fails_when_text_not_specified():
             "selector": "#target"
         }
 
-        action = AssertTextAction(step)
+        action = AssertTextAction(TEST_SITE, step)
         with pytest.raises(ValueError) as exc_info:
             action.execute(page)
         
