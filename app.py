@@ -1,3 +1,4 @@
+import time
 from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 from actions.factory import ActionFactory
@@ -10,6 +11,7 @@ def run_tests():
     # APIキーの検証
     auth_header = request.headers.get("Authorization")
     if not auth_header or auth_header != f"Bearer {Config.API_KEY}":
+        time.sleep(5)
         return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json()
