@@ -36,6 +36,6 @@
 
 ## 技術的制約・考慮事項
 - 実行環境: 主にDockerコンテナ内での実行を想定。ローカル開発およびCloud Runへのデプロイを視野に入れる。
-- Playwrightの依存関係: `dockerfile` 内で `playwright install --with-deps chromium` を実行し、必要なブラウザとライブラリをインストールする。別途Chrome等のインストールは不要。
+- Playwrightの依存関係: `Dockerfile` 内で `playwright install --with-deps chromium` を実行し、必要なブラウザとライブラリをインストールする。別途Chrome等のインストールは不要。
 - Webサーバー: Flaskの組み込みサーバーを使用
 - テストケースJSON: 現在はリクエストボディで直接受け取るが、将来的にファイルパス指定による読み込みに変更する可能性あり。

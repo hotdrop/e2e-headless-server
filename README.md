@@ -1,9 +1,8 @@
 # 概要
-このアプリはE2Eテストを支援するサーバーアプリです。
-テスト対象のWebサイトURLとサイトID、テストケース(json)を受け取り、PlayWrightライブラリを使用してテストケースを実行し結果をレスポンスで返します。可能な限り簡単かつシンプルな構成を心がけて開発しています。
+このアプリはE2Eテストを支援するサーバーアプリです。APIで受け取ったテストケース情報をもとに、PlayWrightライブラリを使用してテストを実行し結果をレスポンスで返します。可能な限り簡単かつシンプルな構成を心がけて開発しています。
 
-- ローカル: Dockerコンテナを起動し、curlコマンドでAPIをテストできる。特にクラウドサービスは使用しない
-- リモート: `CloudRun`上にデプロイして稼働させる。`Cloud Storage`や`Firestore`など`Google Cloud`のサービスを使用する
+- ローカル: Dockerコンテナを起動しcurlコマンドでAPIをテストできます。
+- リモート: `Cloud Run`上にデプロイして稼働します。スクリーンショットは`Cloud Storage`に、テスト結果は`Firestore`に保存します。
 
 # 構成要素の整理
 1. 環境・技術スタック
@@ -53,15 +52,13 @@ project_root/
 | timeoutMillis | タイムアウトをmsで指定。scroll_into_viewアクション時のみ使用。デフォルトは5秒。 |
 
 # APIの認証について
-CloudRun上にデプロイするとエンドポイントを知っていれば誰でも実行できます。しかし、第三者がこのAPIを実行しても特に盗用される情報はありません。
-そこでガチガチにセキュリティを固めることはせず最低限のセキュリティを担保する設計としてAPI Keyを採用することにしました。
-API Keyは環境変数で指定します。curlコマンドで"Authorization"を指定することで容易に検証が可能となります。
+`Cloud Run`上にデプロイするとエンドポイントを知っていれば誰でも実行できます。しかし、第三者がこのAPIを実行しても特に盗用される情報はありません。そこでガチガチにセキュリティを固めることはせず最低限のセキュリティを担保する`API Key`を採用することにしました。
 
 # スクリーンショットについて
 スクリーンショットアクションを使うとスクリーンショットを取得し、`YYYYMMDDHHMMSS.png`というファイル名で保存します。保存先のディレクトリ仕様は以下のとおりです。
 
 - ENVが"dev"の場合
-  - Dockerコンテナ内の`/output/[siteId]/[日付]/[ファイル名]`に保存されます。
+  - Dockerコンテナ内の`/output/[siteId]/[日付]/[ファイル名]`に保存します。
 - ENVが"dev"でない場合
   - `Cloud Storage`に保存します。
 
@@ -103,10 +100,28 @@ docker run -p 8080:8080 -v $(pwd)/output:/output -e ENV=dev -e API_KEY=KEY12345 
 // サンプルのテストケース実行
 curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case2.json
 ```
+
+# GoogleCloud Runへのサーバーデプロイ
+```sh
+# Cloud Buildでdockerイメージ作成
+gcloud builds submit --tag asia-northeast1-docker.pkg.dev/[ProjectName]/[バケット名]/e2e-test-server
+
+# Cloud Runにデプロイ
+gcloud run deploy e2e-test-server \
+ --image asia-northeast1-docker.pkg.dev/[ProjectName]/[バケット名]/e2e-test-server \
+ --platform managed  \
+ --region asia-northeast1  \
+ --allow-unauthenticated  \
+ --set-env-vars="API_KEY=XXX"  \
+ --set-env-vars="ENV=prod" \
+ --set-env-vars="CLOUD_STORAGE_BUCKET=YYYY"
+```
+
 # 将来的に追加しても良いアクション
 |      action名    |     内容     |
 | ---------------- | ------------- |
 | press_key        | エンターキーやタブなどのキー操作 |
+
 
 
 # 過去の検討事項まとめ
