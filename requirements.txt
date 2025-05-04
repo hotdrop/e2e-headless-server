@@ -2,3 +2,4 @@ flask
 playwright
 pytest
 google-cloud-storage
+google-cloud-firestore

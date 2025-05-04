@@ -4,7 +4,7 @@ from config import Config, ENV
 
 class StorageHandler:
     def __init__(self):
-        if ENV != "dev":
+        if ENV.lower() != "dev":
             self.client = storage.Client()
             self.bucket = self.client.bucket(Config.BUCKET_NAME)
         else:
@@ -14,7 +14,7 @@ class StorageHandler:
     # site_id を引数に追加
     def save_screenshot(self, temp_path: str, site_id: str, date_str: str, filename: str) -> str:
         # スクリーンショットを保存し、保存先のパスを返す
-        if ENV == "dev":
+        if ENV.lower() == "dev":
             # site_id を渡す
             return self._save_screenshot_local(temp_path, site_id, date_str, filename)
         else:
