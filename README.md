@@ -51,10 +51,10 @@ project_root/
 | exists        | assert時に要素が存在すべきかどうか(true/false) |
 | timeoutMillis | タイムアウトをmsで指定。scroll_into_viewアクション時のみ使用。デフォルトは5秒。 |
 
-# APIの認証について
+# API認証
 `Cloud Run`上にデプロイするとエンドポイントを知っていれば誰でも実行できます。しかし、第三者がこのAPIを実行しても特に盗用される情報はありません。そこでガチガチにセキュリティを固めることはせず最低限のセキュリティを担保する`API Key`を採用することにしました。
 
-# スクリーンショットについて
+# スクリーンショットの保存場所
 スクリーンショットアクションを使うとスクリーンショットを取得し、`YYYYMMDDHHMMSS.png`というファイル名で保存します。保存先のディレクトリ仕様は以下のとおりです。
 
 - ENVが"dev"の場合
@@ -117,12 +117,18 @@ gcloud run deploy e2e-test-server \
  --set-env-vars="CLOUD_STORAGE_BUCKET=YYYY"
 ```
 
+
+
 # 将来的に追加しても良いアクション
 |      action名    |     内容     |
 | ---------------- | ------------- |
 | press_key        | エンターキーやタブなどのキー操作 |
 
-
+# 備考
+このプロジェクトはClineで実装しており、MemoryBank機能をカスタムして使っています。タスク完了時は以下の指示をしています。
+```
+update memory bank
+```
 
 # 過去の検討事項まとめ
 ## SeleniumとPlaywrightどちらを採用すべきか？
