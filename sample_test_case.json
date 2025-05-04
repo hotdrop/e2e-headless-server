@@ -1,6 +1,7 @@
 {
   "target_url": "https://example.com/",
   "site_id": "sample_site",
+  "test_case_id": 20250504130001,
   "test_case": {
     "steps": [
       {

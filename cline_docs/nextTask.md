@@ -15,9 +15,9 @@ Firestoreはコレクションとドキュメントが交互になるため以�
   - [siteId](document)
     - test-case(collection)
       - [testCaseId](document)
-        - 前回実行日時: timestamp
-        - テスト結果: string ("succes"または"error"のどちらかの文字列を入れる)
-        - エラー詳細: string（エラー時の詳細文字列を入れる）
+        - testRunAt: 前回実行日時を保持します。データ型は"timestamp"です
+        - result: テスト結果を"succes"または"failed"という文字列で保持します。データ型は"string"です
+        - detail: エラー詳細を保持します。データ型は"string"です。
 
 # テスト結果保存処理
 PlayWrightでテストケース実行後、APIのレスポンスを返却する前に`siteId`と`testCaseId`をもとにFirestoreにテスト結果を保存する。
