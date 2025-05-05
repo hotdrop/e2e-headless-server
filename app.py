@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from playwright.sync_api import sync_playwright
 from actions.factory import ActionFactory
 from config import Config
-from firestore_client import save_test_result, get_test_results_by_site
+from services.firestore_client import save_test_result, get_test_results_by_site
 
 app = Flask(__name__)
 

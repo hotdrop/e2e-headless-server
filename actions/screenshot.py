@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from actions.base import BaseAction
 from config import Config
-from storage import StorageHandler
+from services.storage import StorageHandler
 
 class ScreenshotAction(BaseAction):
     def execute(self, page):
