@@ -36,32 +36,24 @@ def run_tests():
     try:
         results = run_test_flow(target_url, site_id, test_case)
 
-        # Firestoreへの保存処理を追加
         try:
-            # エラー詳細を文字列化 (成功時はNone)
-            error_detail_str = str(results) if results.get("status") == "failed" else None
             save_test_result(
                 site_id=site_id,
                 test_case_id=test_case_id,
-                result=results.get("status", "unknown"), # ステータスがない場合のデフォルト値
-                error_detail=error_detail_str
+                result=results.get("status", "unknown")
             )
         except Exception as firestore_e:
-            # Firestore保存エラーはログに出力し、APIレスポンスには影響させない
             logger.error(f"Firestoreへのテスト結果保存中にエラーが発生しました: {firestore_e}")
 
         return jsonify(results), 200
     except Exception as e:
-        # run_test_flow 自体のエラー
-        logger.error(f"テストフロー実行中にエラーが発生しました: {e}") # エラーログを追加
+        logger.error(f"テストフロー実行中にエラーが発生しました: {e}")
 
-        # Firestore保存 (テストフロー失敗時)
         try:
             save_test_result(
                 site_id=site_id,
                 test_case_id=test_case_id,
-                result="failed",
-                error_detail=str(e) # テストフロー自体のエラーメッセージを保存
+                result="failed"
             )
         except Exception as firestore_e:
             logger.error(f"Firestoreへのテスト結果保存中にエラーが発生しました (テストフロー失敗時): {firestore_e}")

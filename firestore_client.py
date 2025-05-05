@@ -25,12 +25,12 @@ def init_firestore_client() -> Optional[firestore.Client]:
     try:
         return firestore.Client()
     except Exception as e:
-        logger.error("Firestoreクライアントの初期化処理で想定外のエラー: %s", e)
+        logger.error("Firestoreクライアントの初期化処理で想定外のエラー: {e}")
         raise
 
 db_client = init_firestore_client()
 
-def save_test_result(site_id: str, test_case_id: str, result: str, error_detail: str = None) -> bool:
+def save_test_result(site_id: str, test_case_id: str, result: str) -> bool:
     if IS_DEV or db_client is None:
         logger.info("ローカル環境なのでテスト結果保存処理はスキップします")
         return False
@@ -41,8 +41,7 @@ def save_test_result(site_id: str, test_case_id: str, result: str, error_detail:
     # 保存するデータを作成
     data = {
         "testRunAt": firestore.SERVER_TIMESTAMP,
-        "result": result,
-        "detail": error_detail or ""
+        "result": result
     }
 
     try:
@@ -54,7 +53,7 @@ def save_test_result(site_id: str, test_case_id: str, result: str, error_detail:
             .document(test_case_id)
         )
         doc_ref.set(data)
-        logger.info("テスト結果を保存しました。site_id=%s test_case_id=%s", site_id, test_case_id)
+        logger.info("テスト結果を保存しました。site_id={site_id} test_case_id={test_case_id}")
         return True
     except Exception as e:
         raise RuntimeError(f"テスト結果保存処理でエラー: site_id={site_id} test_case_id={test_case_id}", e)
@@ -77,8 +76,8 @@ def get_test_results_by_site(site_id: str) -> Dict[str, Dict[str, Any]]:
         )
         for doc in test_cases_ref.stream():
             results[doc.id] = doc.to_dict()
-        logger.info("テスト結果 %d 件取得しました。site_id=%s", len(results), site_id)
+        logger.info(f"テスト結果 {len(results)} 件取得しました。site_id={site_id}")
     except Exception as e:
-        raise RuntimeError(f"テスト結果取得処理でエラー: site_id={site_id}", e)
+        raise RuntimeError(f"テスト結果取得処理でエラー: site_id={site_id} ", e)
 
     return results
