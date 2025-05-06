@@ -7,19 +7,10 @@
 # 構成要素の整理
 1. 環境・技術スタック
    1. 言語: python
-   2. HTTPサーバー: Flask
-   3. E2Eテストライブラリ: Playwright
-   4. 実行環境: Docker
-2. API仕様
-   1. エンドポイント: `/run_tests`
-   2. メソッド: POST
-   3. ヘッダー: APIKeyで認証
-   4. リクエストのパラメータ:
-      1. テスト対象URL
-      2. テスト対象サイトID
-      3. テストケース(jsonオブジェクト)
-   5. レスポンス:
-      1. 実行結果（成功・失敗、ログ、失敗理由など）
+   2. 実行環境: GoogleCloud
+   3. HTTPサーバー: Flask
+   4. E2Eテストライブラリ: Playwright
+   5. 利用サービス: Cloud Run, Cloud Storage, Firestore
 
 # ディレクトリ構成
 project_root/  
@@ -51,9 +42,6 @@ project_root/
 | exists        | assert時に要素が存在すべきかどうか(true/false) |
 | timeoutMillis | タイムアウトをmsで指定。scroll_into_viewアクション時のみ使用。デフォルトは5秒。 |
 
-# API認証
-`Cloud Run`上にデプロイするとエンドポイントを知っていれば誰でも実行できます。しかし、第三者がこのAPIを実行しても特に盗用される情報はありません。そこでガチガチにセキュリティを固めることはせず最低限のセキュリティを担保する`API Key`を採用することにしました。
-
 # スクリーンショットの保存場所
 スクリーンショットアクションを使うとスクリーンショットを取得し、`YYYYMMDDHHMMSS.png`というファイル名で保存します。保存先のディレクトリ仕様は以下のとおりです。
 
@@ -67,6 +55,52 @@ project_root/
   - 環境変数`CLOUD_STORAGE_BUCKET`から取得します。この環境変数が設定されていない場合のデフォルト値は"e2e-test-screenshots"です。(config.py)
 - 保存先
   - バケット内のパス（オブジェクト名）は`CLOUD_STORAGE_BUCKET/[siteId]/日付/ファイル名`という形式になります。
+
+# API仕様
+1. テストケース実行: `/run_tests`
+   1. メソッド: POST
+   2. リクエストのパラメータ:
+      1. テスト対象URL
+      2. テスト対象サイトID
+      3. テストケースID
+      4. テストケース(jsonオブジェクト)
+   3. レスポンス:
+      1. 実行結果
+2. テスト結果取得: `/get_results/<site_id>`
+   1. メソッド: GET
+   2. リクエストのパラメータ: ー
+   3. レスポンス: テスト結果のリスト
+
+## API認証
+`Cloud Run`上にデプロイするとエンドポイントを知っていれば誰でも実行できます。しかし、第三者がこのAPIを実行しても特に盗用される情報はありません。そこでガチガチにセキュリティを固めることはせず最低限のセキュリティを担保する`API Key`を採用することにしました。
+
+# テスト実行フロー図
+```mermaid
+flowchart TD
+    Client["クライアント<br>(curl/HTTPクライアント)"]
+    subgraph server["サーバー(Cloud Run)"]
+        direction TB
+        FlaskAPI["Flask APIサーバー"]
+        Factory["Action Factoryactions"]
+        subgraph actions["Actions"]
+            Base["Base.py"]
+            SomeActions["ClickAction.py"]
+        end
+        Playwright["Playwright<br>ブラウザ自動操作"]
+        OutputDir["/output(dev環境)"]
+        CloudStorage["Cloud Storage(prod環境)"]
+        Firestore["Firestoreテスト結果保存"]
+    end
+
+    Client -- "API実行" --> FlaskAPI
+    FlaskAPI -- "テストケース解析" --> Factory
+    Factory -- "アクション生成" --> actions
+    actions -- "ブラウザ操作" --> Playwright
+    Playwright -- "スクリーンショット保存" --> OutputDir
+    Playwright -- "スクリーンショット保存" --> CloudStorage
+    FlaskAPI -- "テスト結果保存" --> Firestore
+    FlaskAPI -- "実行結果レスポンス" --> Client
+```
 
 # テスト
 テストツールは`pytest`を使用しており、テストを書く対象（粒度）を分けて考えます。
@@ -99,6 +133,9 @@ docker run --rm -p 8080:8080 -v $(pwd)/output:/output -e ENV=dev -e API_KEY=KEY1
 
 // サンプルのテストケース実行
 curl -X POST http://localhost:8080/run_tests -H "Authorization: Bearer KEY12345" -H "Content-Type: application/json" -d @sample_test_case2.json
+
+// テスト結果取得
+curl -X GET http://localhost:8080/get_results/sample_site -H "Authorization: Bearer KEY12345"
 ```
 
 # GoogleCloud Runへのサーバーデプロイ
@@ -117,8 +154,6 @@ gcloud run deploy e2e-test-server \
  --set-env-vars="CLOUD_STORAGE_BUCKET=YYYY"
 ```
 
-
-
 # 将来的に追加しても良いアクション
 |      action名    |     内容     |
 | ---------------- | ------------- |
@@ -130,6 +165,7 @@ gcloud run deploy e2e-test-server \
 update memory bank
 ```
 
+
 # 過去の検討事項まとめ
 ## SeleniumとPlaywrightどちらを採用すべきか？
 Playwrightの方が良い。WebDriverが不要だったり非同期処理に長けている。Microsoftが開発元なのも強い。
@@ -140,3 +176,4 @@ Playwrightの方が良い。WebDriverが不要だったり非同期処理に長�
 したがって、あらかじめJSONを作っておいてRequestのパラメータで指定する。もしjsonが大きくなってきたらファイルパスを送ってE2Eテストサーバー側でファイルを見に行ってjsonをパースする方式にする可能性もある
 ## dockerfile
 `playwright install --with-deps chromium`によって必要なブラウザと依存ライブラリがまとめてインストールされるので別途Chromeなどは不要。slimベースを使い不要なパッケージを避けている。（軽量化意識）Playwrightは自動的にヘッドレスモードで動作する（もちろん非ヘッドレスにも切り替え可）。あとでgunicornに差し替える余地を残しているが、今はFlaskの内蔵サーバーでOK。
+
