@@ -1,12 +1,20 @@
 from actions.base import BaseAction
+from actions.mixins import LocatorResolverMixin
 
-class AssertExistsAction(BaseAction):
+class AssertExistsAction(BaseAction, LocatorResolverMixin):
     def execute(self, page):
-        selector = self.step.get("selector")
+        selector_config = self.step.get("selector")
         expected = self.step.get("exists", True)
-        elements = page.query_selector_all(selector)
-        if expected and not elements:
-            raise AssertionError(f"Assertion failed: Element {selector} not found.")
-        elif not expected and elements:
-            raise AssertionError(f"Assertion failed: Element {selector} exists but should not.")
+
+        if isinstance(selector_config, dict):
+            locator = self._resolve_locator(page, selector_config)
+        else:
+            locator = page.locator(selector_config)
+        
+        element_exists = locator.count() > 0
+
+        if expected and not element_exists:
+            raise AssertionError(f"Assertion failed: Element {selector_config} not found.")
+        elif not expected and element_exists:
+            raise AssertionError(f"Assertion failed: Element {selector_config} exists but should not.")
         return {"status": "executed"}

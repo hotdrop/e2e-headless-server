@@ -1,6 +1,7 @@
 from actions.input import InputAction
 from actions.click import ClickAction
 from actions.wait import WaitAction
+from actions.wait_for_selector_action import WaitForSelectorAction
 from actions.assert_exists import AssertExistsAction
 from actions.assert_text import AssertTextAction
 from actions.screenshot import ScreenshotAction
@@ -11,18 +12,20 @@ class ActionFactory:
     def create(site_id: str, step: dict):
         action = step.get("action")
         if action == "input":
-            return InputAction(site_id, step) 
+            return InputAction(site_id, step)
         elif action == "click":
-            return ClickAction(site_id, step) 
+            return ClickAction(site_id, step)
         elif action == "wait":
-            return WaitAction(site_id, step) 
+            return WaitAction(site_id, step)
+        elif action == "waitForSelector":
+            return WaitForSelectorAction(site_id, step)
         elif action == "assertExists":
-            return AssertExistsAction(site_id, step) 
+            return AssertExistsAction(site_id, step)
         elif action == "assertText":
-            return AssertTextAction(site_id, step) 
+            return AssertTextAction(site_id, step)
         elif action == "screenshot":
             return ScreenshotAction(site_id, step)
-        elif action == "scroll_into_view":
+        elif action == "scrollIntoView":
             return ScrollIntoViewAction(site_id, step)
         else:
             raise ValueError(f"Unknown action: {action}")
