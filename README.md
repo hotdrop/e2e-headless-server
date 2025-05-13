@@ -12,49 +12,19 @@
    4. E2Eテストライブラリ: Playwright
    5. 利用サービス: Cloud Run, Cloud Storage, Firestore
 
-# ディレクトリ構成
-project_root/  
-├── app.py  
-├── actions/  
-│　　　├── base.py  
-│　　　├── click.py   
-│　　　└── ...  
-├── tests/  
-│　　　├── test_input_action.py  
-│　　　├── test_click_action.py  
-│　　　└── ...  
-├── requirements.txt  
-└── dockerfile  
-
-- `actions/`: ここにアクションを1ファイルずつ分けて入れる
-- `base.py`: 実装するアクションは必ずbase.pyを継承する
-- `tests/`: アクションを実装したら必ずテストも実装する
-
 # テストケースのjson仕様
-独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行します。actionの仕様は以下の通りです。サンプルのjsonが必要な場合は同ディレクトリの`sample_test_case.json`を確認してください。
+独自仕様のテストケースjsonを読み込み、パースしてそれぞれのactionを実行します。サポートしているアクションは以下の通りです。詳細仕様は`design_docs/`を参照のこと。
 
-|     要素名     |     内容     |
-| ------------- | ------------- |
-| action        | 実行する操作。input, click, wait, assertExists, assertText, screenshot, scroll_into_view |
-| selector      | CSSセレクタ |
-| value         | 入力値。inputアクション時のみ使用 |
-| secondswait   | アクション時に待機する秒数 |
-| exists        | assert時に要素が存在すべきかどうか(true/false) |
-| timeoutMillis | タイムアウトをmsで指定。scroll_into_viewアクション時のみ使用。デフォルトは5秒。 |
-
-# スクリーンショットの保存場所
-スクリーンショットアクションを使うとスクリーンショットを取得し、`YYYYMMDDHHMMSS.png`というファイル名で保存します。保存先のディレクトリ仕様は以下のとおりです。
-
-- ENVが"dev"の場合
-  - Dockerコンテナ内の`/output/[siteId]/[日付]/[ファイル名]`に保存します。
-- ENVが"dev"でない場合
-  - `Cloud Storage`に保存します。
-
-## Cloud Storageの仕様
-- バケット名の取得
-  - 環境変数`CLOUD_STORAGE_BUCKET`から取得します。この環境変数が設定されていない場合のデフォルト値は"e2e-test-screenshots"です。(config.py)
-- 保存先
-  - バケット内のパス（オブジェクト名）は`CLOUD_STORAGE_BUCKET/[siteId]/日付/ファイル名`という形式になります。
+|    action name    |     内容     |
+| ----------------- | ------------ |
+| click             | ボタンなどの要素をクリックする |
+| input             | 入力フィールドに何か入力する |
+| screenshot        | 表示されている画面のスクリーンショットを取得する |
+| scroll_into_view  | 指定要素までスクロールする |
+| wait              | 指定秒数待機する |
+| wait_for_selector | 画面に指定のセレクタが表示されるまで待機する |
+| assert_exists     | 指定要素が存在するか？ |
+| assert_text       | 指定要素のラベルが指定したテキストと一致するか？ |
 
 # API仕様
 1. テストケース実行: `/run_tests`
@@ -68,7 +38,7 @@ project_root/
       1. 実行結果
 2. テスト結果取得: `/get_results/<site_id>`
    1. メソッド: GET
-   2. リクエストのパラメータ: ー
+   2. リクエストのパラメータ: なし
    3. レスポンス: テスト結果のリスト
 
 ## API認証
@@ -102,7 +72,7 @@ flowchart TD
     FlaskAPI -- "実行結果レスポンス" --> Client
 ```
 
-# テスト
+# ユニットテスト
 テストツールは`pytest`を使用しており、テストを書く対象（粒度）を分けて考えます。
 
 |      テスト対象     | 内容 |
@@ -154,26 +124,8 @@ gcloud run deploy e2e-test-server \
  --set-env-vars="CLOUD_STORAGE_BUCKET=YYYY"
 ```
 
-# 将来的に追加しても良いアクション
-|      action名    |     内容     |
-| ---------------- | ------------- |
-| press_key        | エンターキーやタブなどのキー操作 |
-
 # 備考
 このプロジェクトはClineで実装しており、MemoryBank機能をカスタムして使っています。タスク完了時は以下の指示をしています。
 ```
 update memory bank
 ```
-
-
-# 過去の検討事項まとめ
-## SeleniumとPlaywrightどちらを採用すべきか？
-Playwrightの方が良い。WebDriverが不要だったり非同期処理に長けている。Microsoftが開発元なのも強い。
-## FlaskかFastAPIか
-すぐにシンプルな構成で始めたい場合はFlask、長期的に保守・拡張を視野に入れて非同期処理を前提にしたい場合はFastAPiが良いとのこと。
-## テストケースのjsonはAPIで渡すべきか？ファイルにするべきか？
-「開発スピード」と「疎結合な構成」を両立させたいなら、まずAで構築してBへの移行余地を残す設計（パラメータにjson or json_uri）が良いです。Playwrightコード側も、受け取るJSONの構造が一定ならファイルからでもインラインでも同じパース処理で使えるようにしておくのが望ましい。
-したがって、あらかじめJSONを作っておいてRequestのパラメータで指定する。もしjsonが大きくなってきたらファイルパスを送ってE2Eテストサーバー側でファイルを見に行ってjsonをパースする方式にする可能性もある
-## dockerfile
-`playwright install --with-deps chromium`によって必要なブラウザと依存ライブラリがまとめてインストールされるので別途Chromeなどは不要。slimベースを使い不要なパッケージを避けている。（軽量化意識）Playwrightは自動的にヘッドレスモードで動作する（もちろん非ヘッドレスにも切り替え可）。あとでgunicornに差し替える余地を残しているが、今はFlaskの内蔵サーバーでOK。
-

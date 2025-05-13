@@ -13,6 +13,29 @@ WebアプリケーションのE2Eテストを手動または複雑な設定で�
 - コンテナ化: Docker
 - テストフレームワーク: pytest
 
+# ディレクトリ構成
+project_root/
+├── app.py
+├── config.py
+├── actions/     # テストケースJSONのacionを実装する場合はここ
+│　　　├── base.py
+│　　　├── click.py
+│　　　└── ...
+├── tests/       # テストケースJSONのactionを実装した場合は必ずユニットテストも実装する
+│　　　├── test_input_action.py
+│　　　├── test_click_action.py
+│　　　└── ...
+├── services/    # 利用サービスの実装はここ
+│　　　├── firestore_client.py
+│　　　└── storage.py
+├── cline_docs/  # MemoryBankで使用するdocs
+│　　　└── ...
+├── design_docs/ # アクションや利用サービスの実装仕様。アクションの実装を把握したい場合はここのドキュメントを参照のこと
+│　　　├── action_design_xxxx.md
+│　　　└── ...
+├── requirements.txt
+└── dockerfile
+
 ## アーキテクチャ概要
 - FlaskベースのAPIサーバーとして構築されています。
 - 単一のエンドポイント`/run_tests`(POST)を持ちます。
@@ -36,9 +59,3 @@ WebアプリケーションのE2Eテストを手動または複雑な設定で�
 - テストの実行結果（成功/失敗、ログ、失敗理由など）をAPIレスポンスとして返します。
 - ローカル環境（Docker）およびリモート環境（Google Cloud Run）での実行をサポートします。
 - APIキーによる簡単な認証メカニズムを備えます。
-
-# 機能仕様
-design_docsに実装タスクを依頼した時の詳細仕様ドキュメントがあります。必要に応じて読み込んでください。
-
-- firestore_access.md
-  - テスト結果をFirestoreへ保存する処理と、テスト結果をFirestoreから取得する処理の仕様を記載しています。
