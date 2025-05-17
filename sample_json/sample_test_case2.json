@@ -1,0 +1,75 @@
+{
+  "target_url": "",
+  "site_id": "",
+  "test_case_id": "20250514114724",
+  "test_case": {
+    "steps": [
+      {
+        "action": "input",
+        "selector": {
+          "by": "role",
+          "type": "textbox",
+          "name": "メールアドレス"
+        },
+        "value": "sample@test.jp"
+      },
+      {
+        "action": "input",
+        "selector": {
+          "by": "role",
+          "type": "textbox",
+          "name": "パスワード"
+        },
+        "value": "pass12345"
+      },
+      {
+        "action": "click",
+        "selector": {
+          "by": "role",
+          "type": "button",
+          "name": "ログイン"
+        }
+      },
+      {
+        "action": "waitForSelector",
+        "selector": {
+          "by": "text",
+          "text": "sample"
+        },
+        "state": "visible"
+      },
+      {
+        "action": "click",
+        "selector": {
+          "by": "text",
+          "text": "ユーザー"
+        }
+      },
+      {
+        "action": "click",
+        "selector": {
+          "chain": [
+            {
+              "by": "role",
+              "type": "row",
+              "name": "test"
+            },
+            {
+              "by": "role",
+              "type": "button"
+            }
+          ],
+          "index": 1
+        }
+      },
+      {
+        "action": "wait",
+        "seconds": 1
+      },
+      {
+        "action": "screenshot",
+        "text": "スクショ"
+      }
+    ]
+  }
+}

@@ -19,53 +19,7 @@
 | `timeoutMillis` | integer         | 任意  | 要素が表示されるのを待つ最大時間（ミリ秒）。デフォルトは 5000 (5秒) です。 |
 
 ## セレクタ
-このアクションは、操作対象の要素を指定するために以下の形式のセレクタをサポートしています。
-
-### 文字列セレクタ
-- CSSセレクタまたはXPathを指定します。
-- 例: "div#footer", "//button[@id='load-more']"
-
-### 辞書型セレクタ
-Playwrightの`Locator API`に基づいて辞書形式でセレクタを指定します。サポートしている`by`の種類と、それに応じたパラメータは以下の通りです。
-
-#### `by: "role"`: ARIAロール
-- `type`: (必須) ARIAロール名 (例: button, link, heading)。このアクションでは、ロールタイプを指定する必要があります。
-- `name`: (任意) アクセシブルネーム。要素を特定するための名前。
-
-```json
-"selector": {
-  "by": "role",
-  "type": "article",
-  "name": "最新の投稿"
-}
-```
-
-#### `by: "text"`: 表示テキスト
-- `text`: (必須) 検索するテキスト文字列。このテキストを含む要素を探します。
-```json
-"selector": {
-  "by": "text",
-  "text": "ユーザーID"
-}
-```
-
-#### `by: "placeholder"`: プレースホルダーテキスト
-- `text`: (必須) input要素などのプレースホルダー属性のテキスト文字列。
-```json
-"selector": {
-  "by": "placeholder",
-  "text": "コメントを入力"
-}
-```
-
-#### `by: "label"`: ラベルテキスト
-- `name`: (必須) input要素などに関連付けられたラベル要素のテキスト文字列。
-```json
-"selector": {
-  "by": "label",
-  "name": "利用規約"
-}
-```
+`./selector_design.md`を参照のこと
 
 ## JSONサンプル
 ```json

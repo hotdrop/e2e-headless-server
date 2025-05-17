@@ -135,3 +135,160 @@ def test_click_action_with_unsupported_selector_by_value(page: Page):
     with pytest.raises(ValueError) as excinfo:
         action.execute(page)
     assert "Unsupported selector 'by' value: unsupported_method" in str(excinfo.value)
+
+def test_click_action_with_chained_selectors(page: Page):
+    page.set_content('''
+        <div role="row" aria-label="User Row">
+            <button onclick="window.clickedChained1=true">First Button</button>
+            <button onclick="window.clickedChained2=true">Second Button</button>
+        </div>
+        <script>
+            window.clickedChained1 = false;
+            window.clickedChained2 = false;
+        </script>
+    ''')
+
+    step = {
+        "action": "click",
+        "selector": {
+            "chain": [
+                {
+                    "by": "role",
+                    "type": "row",
+                    "name": "User Row"
+                },
+                {
+                    "by": "role",
+                    "type": "button"
+                }
+            ]
+        }
+    }
+
+    action = ClickAction(DUMMY_SITE_ID, step)
+    result = action.execute(page)
+
+    assert result["status"] == "executed"
+    # チェインされたセレクタは最初の要素をクリックする
+    assert page.evaluate("window.clickedChained1") is True
+    assert page.evaluate("window.clickedChained2") is False
+
+def test_click_action_with_chained_selectors_and_index(page: Page):
+    page.set_content('''
+        <div role="row" aria-label="User Row">
+            <button onclick="window.clickedChainedIndex1=true">First Button</button>
+            <button onclick="window.clickedChainedIndex2=true">Second Button</button>
+        </div>
+        <script>
+            window.clickedChainedIndex1 = false;
+            window.clickedChainedIndex2 = false;
+        </script>
+    ''')
+
+    step = {
+        "action": "click",
+        "selector": {
+            "chain": [
+                {
+                    "by": "role",
+                    "type": "row",
+                    "name": "User Row"
+                },
+                {
+                    "by": "role",
+                    "type": "button"
+                }
+            ],
+            "index": 1
+        }
+    }
+
+    action = ClickAction(DUMMY_SITE_ID, step)
+    result = action.execute(page)
+
+    assert result["status"] == "executed"
+    # インデックス1の要素（2番目のボタン）がクリックされる
+    assert page.evaluate("window.clickedChainedIndex1") is False
+    assert page.evaluate("window.clickedChainedIndex2") is True
+
+def test_click_action_with_complex_chained_selectors(page: Page):
+    page.set_content('''
+        <div role="table">
+            <div role="row" aria-label="User Row 1">
+                <div role="cell">User 1</div>
+                <button onclick="window.clickedComplex1=true">Action 1</button>
+            </div>
+            <div role="row" aria-label="User Row 2">
+                <div role="cell">User 2</div>
+                <button onclick="window.clickedComplex2=true">Action 2</button>
+            </div>
+        </div>
+        <script>
+            window.clickedComplex1 = false;
+            window.clickedComplex2 = false;
+        </script>
+    ''')
+
+    step = {
+        "action": "click",
+        "selector": {
+            "chain": [
+                {
+                    "by": "role",
+                    "type": "row",
+                    "name": "User Row 2"
+                },
+                {
+                    "by": "role",
+                    "type": "button"
+                }
+            ]
+        }
+    }
+
+    action = ClickAction(DUMMY_SITE_ID, step)
+    result = action.execute(page)
+
+    assert result["status"] == "executed"
+    # 2番目の行のボタンがクリックされる
+    assert page.evaluate("window.clickedComplex1") is False
+    assert page.evaluate("window.clickedComplex2") is True
+
+def test_click_action_with_invalid_chain_selector(page: Page):
+    page.set_content('<button onclick="window.clicked=true">Test</button>')
+    step = {
+        "action": "click",
+        "selector": {
+            "chain": [
+                {
+                    "by": "unsupported_method",
+                    "value": "some_value"
+                }
+            ]
+        }
+    }
+    action = ClickAction(DUMMY_SITE_ID, step)
+
+    with pytest.raises(ValueError) as excinfo:
+        action.execute(page)
+    assert "Unsupported selector 'by' value: unsupported_method" in str(excinfo.value)
+
+def test_click_action_with_invalid_index(page: Page):
+    page.set_content('<button onclick="window.clicked=true">Test</button>')
+    step = {
+        "action": "click",
+        "selector": {
+            "chain": [
+                {
+                    "by": "role",
+                    "type": "button"
+                }
+            ],
+            "index": -1  # 無効なインデックス
+        }
+    }
+    action = ClickAction(DUMMY_SITE_ID, step)
+
+    with pytest.raises(ValueError) as excinfo:
+        action.execute(page)
+    assert "Invalid index value: -1" in str(excinfo.value)

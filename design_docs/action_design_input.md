@@ -17,62 +17,7 @@
 | `value`    | string          | 任意  | 入力する文字列。省略した場合は空文字列が入力されます    |
 
 ## セレクタ
-このアクションは、操作対象の要素を指定するために以下の形式のセレクタをサポートしています。
-
-### 文字列セレクタ
-- CSSセレクタまたはXPathを指定します。
-- 例: "input#username", "//textarea[@name='description']"
-
-### 辞書型セレクタ
-Playwrightの`Locator API`に基づいて辞書形式でセレクタを指定します。サポートしている`by`の種類と、それに応じたパラメータは以下の通りです。
-
-#### `by: "role"`: ARIAロール
-- `type`: (必須) ARIAロール名 (例: textbox, searchbox)。指定がない場合、このinputアクションではデフォルトで "textbox" として扱われます。
-- `name`: (任意) アクセシブルネーム。要素を特定するための名前。
-
-```json
-"selector": {
-  "by": "role",
-  "type": "textbox",
-  "name": "メールアドレス"
-}
-```
-
-typeを省略した場合、デフォルトで"textbox"として探索します。
-
-```json
-"selector": {
-  "by": "role",
-  "name": "検索キーワード" 
-} 
-```
-
-#### `by: "text"`: 表示テキスト
-- `text`: (必須) 検索するテキスト文字列。このテキストを持つ要素に関連付けられた入力フィールドを探します。
-```json
-"selector": {
-  "by": "text",
-  "text": "ユーザーID"
-}
-```
-
-#### `by: "placeholder"`: プレースホルダーテキスト
-- `text`: (必須) input要素のプレースホルダー属性のテキスト文字列。
-```json
-"selector": {
-  "by": "placeholder",
-  "text": "メールアドレスを入力してください"
-}
-```
-
-#### `by: "label"`: ラベルテキスト
-- `name`: (必須) input要素に関連付けられたラベル要素のテキスト文字列。
-```json
-"selector": {
-  "by": "label",
-  "name": "パスワード"
-}
-```
+`./selector_design.md`を参照のこと
 
 ## JSONサンプル
 ```json

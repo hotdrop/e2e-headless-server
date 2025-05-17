@@ -19,53 +19,7 @@
 | `exists`   | boolean         | 任意  | 要素が存在することを期待する場合は true、存在しないことを期待する場合は false を指定します。デフォルトは true です。 |
 
 ## セレクタ
-このアクションは、検証対象の要素を指定するために以下の形式のセレクタをサポートしています。
-
-### 文字列セレクタ
-- CSSセレクタまたはXPathを指定します。
-- 例: "div#user-profile", "//header//img[@alt='Logo']"
-
-### 辞書型セレクタ
-Playwrightの`Locator API`に基づいて辞書形式でセレクタを指定します。サポートしている`by`の種類と、それに応じたパラメータは以下の通りです。
-
-#### `by: "role"`: ARIAロール
-- `type`: (必須) ARIAロール名 (例: button, dialog, listitem)。このアクションでは、ロールタイプを指定する必要があります。
-- `name`: (任意) アクセシブルネーム。要素を特定するための名前。
-
-```json
-"selector": {
-  "by": "role",
-  "type": "navigation",
-  "name": "メインメニュー"
-}
-```
-
-#### `by: "text"`: 表示テキスト
-- `text`: (必須) 検索するテキスト文字列。このテキストを含む要素を探します。
-```json
-"selector": {
-  "by": "text",
-  "text": "エラーメッセージが表示されました"
-}
-```
-
-#### `by: "placeholder"`: プレースホルダーテキスト
-- `text`: (必須) input要素などのプレースホルダー属性のテキスト文字列。
-```json
-"selector": {
-  "by": "placeholder",
-  "text": "必須項目"
-}
-```
-
-#### `by: "label"`: ラベルテキスト
-- `name`: (必須) input要素などに関連付けられたラベル要素のテキスト文字列。
-```json
-"selector": {
-  "by": "label",
-  "name": "利用規約の同意チェックボックス"
-}
-```
+`./selector_design.md`を参照のこと
 
 ## JSONサンプル
 特定の要素が存在することを検証する (デフォルトの exists: true)
